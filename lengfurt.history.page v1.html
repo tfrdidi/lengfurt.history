@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vorher / Heute – Bildvergleich</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #171a21;
+      --text: #f3f5f7;
+      --muted: #a9b1bb;
+      --line: rgba(255,255,255,0.12);
+      --radius: 18px;
+      --shadow: 0 18px 50px rgba(0,0,0,0.28);
+      --max-width: 1100px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #0c0f14 0%, #131822 100%);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(100% - 32px, var(--max-width));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+
+    .hero {
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 65ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .gallery {
+      display: grid;
+      gap: 28px;
+    }
+
+    .compare-card {
+      background: rgba(23, 26, 33, 0.86);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .compare-media {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #090b0f;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .compare-media > img,
+    .compare-overlay img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .compare-base,
+    .compare-overlay {
+      position: absolute;
+      inset: 0;
+    }
+
+    .compare-overlay {
+      width: 50%;
+      overflow: hidden;
+      border-right: 2px solid rgba(255,255,255,0.9);
+    }
+
+    .compare-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      pointer-events: none;
+    }
+
+    .compare-handle::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+    }
+
+    .compare-handle::after {
+      content: "↔";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%);
+      color: #111;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .compare-label {
+      position: absolute;
+      top: 16px;
+      z-index: 2;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(10, 12, 16, 0.72);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 0.86rem;
+      letter-spacing: 0.01em;
+      backdrop-filter: blur(8px);
+    }
+
+    .compare-label.left {
+      left: 16px;
+    }
+
+    .compare-label.right {
+      right: 16px;
+    }
+
+    .compare-range {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: ew-resize;
+    }
+
+    .compare-content {
+      display: grid;
+      gap: 12px;
+      padding: 20px 20px 22px;
+    }
+
+    .compare-content h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      line-height: 1.2;
+    }
+
+    .compare-content p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .compare-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 4px;
+    }
+
+    .compare-link {
+      text-decoration: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      padding: 10px 14px;
+      border-radius: 999px;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .compare-link:hover,
+    .compare-link:focus-visible {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.25);
+      outline: none;
+    }
+
+    .slider-value {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 20px, var(--max-width));
+        padding-top: 28px;
+      }
+
+      .compare-content {
+        padding: 16px;
+      }
+
+      .compare-label {
+        top: 12px;
+        font-size: 0.8rem;
+      }
+
+      .compare-label.left {
+        left: 12px;
+      }
+
+      .compare-label.right {
+        right: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1>Vorher / Heute</h1>
+      <p>
+        Einfacher Einseiten-Prototyp für Bildvergleiche. Pro Abschnitt liegen zwei Bilder übereinander.
+        Mit dem Schieberegler steuerst du, wie viel vom alten oder aktuellen Bild sichtbar ist.
+      </p>
+    </header>
+
+    <section class="gallery">
+      <article class="compare-card">
+        <div class="compare-media" data-compare>
+          <div class="compare-label left">Früher</div>
+          <div class="compare-label right">Heute</div>
+
+          <img
+            class="compare-base"
+            src="https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1600&q=80"
+            alt="Heutige Ansicht eines Gebäudes"
+          />
+
+          <div class="compare-overlay">
+            <img
+              src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1600&q=80"
+              alt="Frühere Ansicht eines Gebäudes"
+            />
+          </div>
+
+          <div class="compare-handle" aria-hidden="true"></div>
+
+          <input
+            class="compare-range"
+            type="range"
+            min="0"
+            max="100"
+            value="50"
+            aria-label="Bildvergleich verschieben"
+          />
+        </div>
+
+        <div class="compare-content">
+          <h2>Beispiel 01 – Stadtszene</h2>
+          <p>
+            Dieser Block zeigt den grundlegenden Aufbau. Ersetze einfach die Bild-URLs durch deine eigenen Dateien
+            oder lokale Pfade, zum Beispiel <code>images/stadt-frueher.jpg</code> und <code>images/stadt-heute.jpg</code>.
+          </p>
+          <div class="compare-meta">
+            <span class="slider-value">Position: 50%</span>
+            <a class="compare-link" href="#" onclick="return false;">Weitere Informationen</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="compare-card">
+        <div class="compare-media" data-compare>
+          <div class="compare-label left">Früher</div>
+          <div class="compare-label right">Heute</div>
+
+          <img
+            class="compare-base"
+            src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80"
+            alt="Heutige Ansicht einer Straße"
+          />
+
+          <div class="compare-overlay">
+            <img
+              src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=1600&q=80"
+              alt="Frühere Ansicht einer Straße"
+            />
+          </div>
+
+          <div class="compare-handle" aria-hidden="true"></div>
+
+          <input
+            class="compare-range"
+            type="range"
+            min="0"
+            max="100"
+            value="35"
+            aria-label="Bildvergleich verschieben"
+          />
+        </div>
+
+        <div class="compare-content">
+          <h2>Beispiel 02 – Straßenzug</h2>
+          <p>
+            Du kannst beliebig viele Vergleichsblöcke untereinander anlegen. Jeder Slider arbeitet unabhängig.
+            Das Layout ist responsiv und funktioniert auch auf Mobilgeräten per Touch.
+          </p>
+          <div class="compare-meta">
+            <span class="slider-value">Position: 35%</span>
+            <a class="compare-link" href="#" onclick="return false;">Projektlink</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <p class="footer-note">
+      Für den produktiven Einsatz solltest du pro Motiv möglichst Bilder mit identischem Ausschnitt,
+      ähnlicher Perspektive und gleichem Seitenverhältnis verwenden. Dann wirkt der Vergleich deutlich präziser.
+    </p>
+
+    <iframe src="https://www.google.com/maps/d/embed?mid=1ggDm_IBhAO5Al_2fngC7RQu9NAcwdJE&ehbc=2E312F" width="640" height="480"></iframe>
+  </main>
+
+  <script>
+    const compareBlocks = document.querySelectorAll('[data-compare]');
+
+    compareBlocks.forEach((block) => {
+      const range = block.querySelector('.compare-range');
+      const overlay = block.querySelector('.compare-overlay');
+      const handle = block.querySelector('.compare-handle');
+      const card = block.closest('.compare-card');
+      const valueLabel = card.querySelector('.slider-value');
+
+      const updateSlider = (value) => {
+        overlay.style.width = `${value}%`;
+        handle.style.left = `${value}%`;
+        valueLabel.textContent = `Position: ${value}%`;
+      };
+
+      updateSlider(range.value);
+
+      range.addEventListener('input', (event) => {
+        updateSlider(event.target.value);
+      });
+    });
+  </script>
+</body>
+</html>
