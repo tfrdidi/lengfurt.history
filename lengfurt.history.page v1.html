@@ -218,6 +218,23 @@
       font-size: 0.95rem;
     }
 
+    .map-section {
+      margin-top: 8px;
+    }
+
+    .map-embed {
+      padding: 0 20px 20px;
+    }
+
+    .map-embed iframe {
+      display: block;
+      width: 100%;
+      min-height: 480px;
+      border: 0;
+      border-radius: 14px;
+      background: #0b0d11;
+    }
+
     .footer-note {
       margin-top: 28px;
       color: var(--muted);
@@ -246,6 +263,14 @@
 
       .compare-label.right {
         right: 12px;
+      }
+
+      .map-embed {
+        padding: 0 16px 16px;
+      }
+
+      .map-embed iframe {
+        min-height: 360px;
       }
     }
   </style>
@@ -348,12 +373,31 @@
       </article>
     </section>
 
+    <section class="map-section" aria-labelledby="karte-titel">
+      <div class="compare-card">
+        <div class="compare-content">
+          <h2 id="karte-titel">Karte zum Ort</h2>
+          <p>
+            Ergänzend zum Bildvergleich ist hier die zugehörige Karte eingebettet. Darüber kannst du die markierten Standorte direkt im räumlichen Zusammenhang betrachten.
+          </p>
+        </div>
+        <div class="map-embed">
+          <iframe
+            src="https://www.google.com/maps/d/embed?mid=1ggDm_IBhAO5Al_2fngC7RQu9NAcwdJE&ehbc=2E312F"
+            width="640"
+            height="480"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Google My Maps Karte"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
     <p class="footer-note">
       Für den produktiven Einsatz solltest du pro Motiv möglichst Bilder mit identischem Ausschnitt,
       ähnlicher Perspektive und gleichem Seitenverhältnis verwenden. Dann wirkt der Vergleich deutlich präziser.
     </p>
-
-    <iframe src="https://www.google.com/maps/d/embed?mid=1ggDm_IBhAO5Al_2fngC7RQu9NAcwdJE&ehbc=2E312F" width="640" height="480"></iframe>
   </main>
 
   <script>
