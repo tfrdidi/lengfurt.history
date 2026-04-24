@@ -1,5 +1,4 @@
 :root {
-  --bg: #0f1115;
   --panel: #171a21;
   --text: #f3f5f7;
   --muted: #a9b1bb;
@@ -117,7 +116,7 @@ a {
 }
 
 .compare-handle::before {
-  content: "";
+  content: "\2194";
   position: absolute;
   top: 50%;
   left: 50%;
