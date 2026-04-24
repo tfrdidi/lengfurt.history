@@ -161,17 +161,6 @@ a {
   right: 16px;
 }
 
-.compare-range {
-  position: absolute;
-  left: 50%;
-  bottom: 12px;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .compare-content {
   display: grid;
   gap: 12px;

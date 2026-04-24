@@ -1,47 +1,49 @@
 const infoPopUp = document.querySelector('#info-pop-up');
-const infoLinks = document.querySelectorAll('.compare-link[href="#info-pop-up"]');
-const popUpClose = infoPopUp.querySelector('.pop-up-close');
-const popUpTitle = infoPopUp.querySelector('.pop-up-title');
-const popUpText = infoPopUp.querySelector('.pop-up-text');
 
-const openPopUp = (title, text) => {
-  popUpTitle.textContent = title;
-  popUpText.textContent = text;
-  infoPopUp.hidden = false;
-  infoPopUp.classList.add('is-open');
-  popUpClose.focus();
-};
+if (infoPopUp) {
+  const infoLinks = document.querySelectorAll('.compare-link[href="#info-pop-up"]');
+  const popUpClose = infoPopUp.querySelector('.pop-up-close');
+  const popUpTitle = infoPopUp.querySelector('.pop-up-title');
+  const popUpText = infoPopUp.querySelector('.pop-up-text');
 
-const closePopUp = () => {
-  infoPopUp.classList.remove('is-open');
-  infoPopUp.hidden = true;
-};
+  const openPopUp = (title, text) => {
+    popUpTitle.textContent = title;
+    popUpText.textContent = text;
+    infoPopUp.hidden = false;
+    infoPopUp.classList.add('is-open');
+    popUpClose.focus();
+  };
 
-infoLinks.forEach((link) => {
-  link.addEventListener('click', (event) => {
-    event.preventDefault();
-    openPopUp(link.dataset.title, link.dataset.infoText);
+  const closePopUp = () => {
+    infoPopUp.classList.remove('is-open');
+    infoPopUp.hidden = true;
+  };
+
+  infoLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      openPopUp(link.dataset.popUpTitle, link.dataset.popUpText);
+    });
   });
-});
 
-popUpClose.addEventListener('click', closePopUp);
+  popUpClose.addEventListener('click', closePopUp);
 
-infoPopUp.addEventListener('click', (event) => {
-  if (event.target === infoPopUp) {
-    closePopUp();
-  }
-});
+  infoPopUp.addEventListener('click', (event) => {
+    if (event.target === infoPopUp) {
+      closePopUp();
+    }
+  });
 
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && !infoPopUp.hidden) {
-    closePopUp();
-  }
-});
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !infoPopUp.hidden) {
+      closePopUp();
+    }
+  });
+}
 
 const compareBlocks = document.querySelectorAll('[data-compare]');
 
 compareBlocks.forEach((block) => {
-  const range = block.querySelector('.compare-range');
   const overlay = block.querySelector('.compare-overlay');
   const handle = block.querySelector('.compare-handle');
   const card = block.closest('.compare-card');
@@ -52,7 +54,6 @@ compareBlocks.forEach((block) => {
 
     overlay.style.width = `${normalizedValue}%`;
     handle.style.left = `${normalizedValue}%`;
-    range.value = normalizedValue;
     valueLabel.textContent = `Position: ${normalizedValue}%`;
   };
 
@@ -63,7 +64,7 @@ compareBlocks.forEach((block) => {
     updateSlider(value);
   };
 
-  updateSlider(range.value);
+  updateSlider(50);
 
   handle.addEventListener('pointerdown', (event) => {
     event.preventDefault();
@@ -92,7 +93,4 @@ compareBlocks.forEach((block) => {
     }
   });
 
-  range.addEventListener('input', (event) => {
-    updateSlider(event.target.value);
-  });
 });
