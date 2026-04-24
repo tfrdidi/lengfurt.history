@@ -254,6 +254,73 @@
       line-height: 1.6;
     }
 
+    .pop-up {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.68);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+    }
+
+    .pop-up.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .pop-up-content {
+      width: min(100%, 520px);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .pop-up-header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .pop-up-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .pop-up-close {
+      display: inline-grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .pop-up-close:hover,
+    .pop-up-close:focus-visible {
+      background: rgba(255,255,255,0.08);
+      outline: none;
+    }
+
+    .pop-up-content p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
     @media (max-width: 720px) {
       .page {
         width: min(100% - 20px, var(--max-width));
@@ -334,7 +401,12 @@
           </p>
           <div class="compare-meta">
             <span class="slider-value">Position: 50%</span>
-            <a class="compare-link" href="#" onclick="return false;">Weitere Informationen</a>
+            <a
+              class="compare-link"
+              href="#info-pop-up"
+              data-title="F6 – Blick vom Kallmuth aus"
+              data-info-text="Datierung: Das Früher Bild ist von vor 1904. In diesem Jahr wurde die erste lengfurter Mainbrücke gebaut."
+            >Weitere Informationen</a>
           </div>
         </div>
       </article>
@@ -378,7 +450,12 @@
           </p>
           <div class="compare-meta">
             <span class="slider-value">Position: 50%</span>
-            <a class="compare-link" href="#" onclick="return false;">Weitere Informationen</a>
+            <a
+              class="compare-link"
+              href="#info-pop-up"
+              data-title="F17 2 – Blick vom Mainkai aufs Kloster"
+              data-info-text="Das Früher-Bild muss vor 1939 aufgenommen sein. Es stammt von einer Postkarte aus 1939."
+            >Weitere Informationen</a>
           </div>
         </div>
       </article>
@@ -411,8 +488,58 @@
     </p>
   </main>
 
+  <div class="pop-up" id="info-pop-up" role="dialog" aria-modal="true" aria-labelledby="pop-up-title" hidden>
+    <div class="pop-up-content">
+      <div class="pop-up-header">
+        <h2 class="pop-up-title" id="pop-up-title"></h2>
+        <button class="pop-up-close" type="button" aria-label="Popup schließen">×</button>
+      </div>
+      <p class="pop-up-text"></p>
+    </div>
+  </div>
+
   
   <script>
+    const infoPopUp = document.querySelector('#info-pop-up');
+    const infoLinks = document.querySelectorAll('.compare-link[href="#info-pop-up"]');
+    const popUpClose = infoPopUp.querySelector('.pop-up-close');
+    const popUpTitle = infoPopUp.querySelector('.pop-up-title');
+    const popUpText = infoPopUp.querySelector('.pop-up-text');
+
+    const openPopUp = (title, text) => {
+      popUpTitle.textContent = title;
+      popUpText.textContent = text;
+      infoPopUp.hidden = false;
+      infoPopUp.classList.add('is-open');
+      popUpClose.focus();
+    };
+
+    const closePopUp = () => {
+      infoPopUp.classList.remove('is-open');
+      infoPopUp.hidden = true;
+    };
+
+    infoLinks.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        openPopUp(link.dataset.title, link.dataset.infoText);
+      });
+    });
+
+    popUpClose.addEventListener('click', closePopUp);
+
+    infoPopUp.addEventListener('click', (event) => {
+      if (event.target === infoPopUp) {
+        closePopUp();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !infoPopUp.hidden) {
+        closePopUp();
+      }
+    });
+
     const compareBlocks = document.querySelectorAll('[data-compare]');
 
     compareBlocks.forEach((block) => {
