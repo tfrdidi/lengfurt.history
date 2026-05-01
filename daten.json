@@ -1,0 +1,84 @@
+{
+  "page": {
+    "title": "Lengfurt-History",
+    "description": "Eine visuelle Zeitreise in die Geschichte von Lengfurt."
+  },
+  "images": [
+    {
+      "title": "F6 - Blick vom Kallmuth aus",
+      "description": "Dieses gut erhaltene Bild aus der Zeit vor einer Lengfurter Mainbrücke oder der Schleuse zeigt eindrucksvoll, wie Lengfurt sich über die Zeit verändert hat.",
+      "labels": {
+        "before": "Früher",
+        "after": "Heute"
+      },
+      "images": {
+        "before": {
+          "src": "bilder/F6.jpeg",
+          "alt": "Frühere Aussicht vom Kallmuth auf Lengfurt"
+        },
+        "after": {
+          "src": "bilder/F6_heute.jpg",
+          "alt": "Heutige Aussicht vom Kallmuth auf Lengfurt"
+        }
+      },
+      "popup": {
+        "linkText": "Weitere Informationen",
+        "title": "F6 - Blick vom Kallmuth aus",
+        "text": "Datierung: Das Früher-Bild ist von vor 1904. In diesem Jahr wurde die erste Lengfurter Mainbrücke gebaut. Auch die Autobahn A3 im Hintergrund vom Kloster wurde erst nach dem Zweiten Weltkrieg fertiggestellt."
+      }
+    },
+    {
+      "title": "F25 - Blick vom Kallmuth auf Lengfurt",
+      "description": "Dieses Foto aus der Zeit um 1926 zeigt unter anderem die alte Mainbrücke. Wo heute die Ein- und Ausfahrt in die Schleuse ist, war früher der Schutzhafen. Vom heutigen Industriegebiet Altfeld war in dieser Zeit noch nicht viel zu sehen.",
+      "labels": {
+        "before": "Früher",
+        "after": "Heute"
+      },
+      "images": {
+        "before": {
+          "src": "bilder/F25_web.jpg",
+          "alt": "Früherer Blick vom Kallmuth auf Lengfurt"
+        },
+        "after": {
+          "src": "bilder/F25_neu.jpg",
+          "alt": "Heutige Aussicht vom Kallmuth auf Lengfurt"
+        }
+      },
+      "popup": {
+        "linkText": "Weitere Informationen",
+        "title": "F25 - Blick vom Kallmuth auf Lengfurt",
+        "text": "Zu dieser Zeit gab es noch keine Schleuse in Lengfurt."
+      }
+    },
+    {
+      "title": "F17 2 - Blick vom Mainkai aufs Kloster",
+      "description": "Dieses Foto von der alten Linde aus zeigt das Kloster Triefenstein. Die Umgehungsstraße und vieles Weitere ist in den letzten Jahren dazu gekommen.",
+      "labels": {
+        "before": "Früher",
+        "after": "Heute"
+      },
+      "images": {
+        "before": {
+          "src": "bilder/F17 2.jpg",
+          "alt": "Früherer Blick aufs Kloster Triefenstein vom Mainkai aus"
+        },
+        "after": {
+          "src": "bilder/F17 2 heute.jpg",
+          "alt": "Heutiger Blick aufs Kloster Triefenstein vom Mainkai aus"
+        }
+      },
+      "popup": {
+        "linkText": "Weitere Informationen",
+        "title": "F17 2 - Blick vom Mainkai aufs Kloster",
+        "text": "Das Früher-Bild muss vor 1939 aufgenommen sein. Es stammt von einer Postkarte aus 1939."
+      }
+    }
+  ],
+  "map": {
+    "title": "Karte mit den Aufnahmepunkten",
+    "description": "Hier sind die Standorte dokumentiert, von wo aus die Fotos aufgenommen wurden.",
+    "embedUrl": "https://www.google.com/maps/d/embed?mid=1ggDm_IBhAO5Al_2fngC7RQu9NAcwdJE&ehbc=2E312F",
+    "iframeTitle": "Google My Maps Karte"
+  },
+  "footerNote": "Hier kommen in Zukunft noch ein paar Fotos dazu."
+}

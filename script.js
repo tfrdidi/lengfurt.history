@@ -1,49 +1,85 @@
+const DATA_URL = 'daten.json';
+
 const infoPopUp = document.querySelector('#info-pop-up');
+const popUpClose = infoPopUp?.querySelector('.pop-up-close');
+const popUpTitle = infoPopUp?.querySelector('.pop-up-title');
+const popUpText = infoPopUp?.querySelector('.pop-up-text');
 
-if (infoPopUp) {
-  const infoLinks = document.querySelectorAll('.compare-link[href="#info-pop-up"]');
-  const popUpClose = infoPopUp.querySelector('.pop-up-close');
-  const popUpTitle = infoPopUp.querySelector('.pop-up-title');
-  const popUpText = infoPopUp.querySelector('.pop-up-text');
+const openPopUp = (title, text) => {
+  if (!infoPopUp || !popUpClose || !popUpTitle || !popUpText) {
+    return;
+  }
 
-  const openPopUp = (title, text) => {
-    popUpTitle.textContent = title;
-    popUpText.textContent = text;
-    infoPopUp.hidden = false;
-    infoPopUp.classList.add('is-open');
-    popUpClose.focus();
-  };
+  popUpTitle.textContent = title;
+  popUpText.textContent = text;
+  infoPopUp.hidden = false;
+  infoPopUp.classList.add('is-open');
+  popUpClose.focus();
+};
 
-  const closePopUp = () => {
-    infoPopUp.classList.remove('is-open');
-    infoPopUp.hidden = true;
-  };
+const closePopUp = () => {
+  if (!infoPopUp) {
+    return;
+  }
 
-  infoLinks.forEach((link) => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      openPopUp(link.dataset.popUpTitle, link.dataset.popUpText);
-    });
+  infoPopUp.classList.remove('is-open');
+  infoPopUp.hidden = true;
+};
+
+const createCompareCard = (entry) => {
+  const article = document.createElement('article');
+  article.className = 'compare-card';
+
+  article.innerHTML = `
+    <div class="compare-media" data-compare>
+      <div class="compare-label left"></div>
+      <div class="compare-label right"></div>
+
+      <img class="compare-base" />
+
+      <div class="compare-overlay">
+        <img />
+      </div>
+
+      <div class="compare-handle" aria-hidden="true"></div>
+    </div>
+
+    <div class="compare-content">
+      <h2></h2>
+      <p></p>
+      <div class="compare-meta">
+        <span class="slider-value">Position: 50%</span>
+        <a class="compare-link" href="#info-pop-up">Weitere Informationen</a>
+      </div>
+    </div>
+  `;
+
+  const leftLabel = article.querySelector('.compare-label.left');
+  const rightLabel = article.querySelector('.compare-label.right');
+  const baseImage = article.querySelector('.compare-base');
+  const overlayImage = article.querySelector('.compare-overlay img');
+  const title = article.querySelector('.compare-content h2');
+  const description = article.querySelector('.compare-content p');
+  const link = article.querySelector('.compare-link');
+
+  leftLabel.textContent = entry.labels?.before ?? 'Früher';
+  rightLabel.textContent = entry.labels?.after ?? 'Heute';
+  baseImage.src = entry.images.after.src;
+  baseImage.alt = entry.images.after.alt;
+  overlayImage.src = entry.images.before.src;
+  overlayImage.alt = entry.images.before.alt;
+  title.textContent = entry.title;
+  description.textContent = entry.description;
+  link.textContent = entry.popup?.linkText ?? 'Weitere Informationen';
+  link.addEventListener('click', (event) => {
+    event.preventDefault();
+    openPopUp(entry.popup?.title ?? entry.title, entry.popup?.text ?? '');
   });
 
-  popUpClose.addEventListener('click', closePopUp);
+  return article;
+};
 
-  infoPopUp.addEventListener('click', (event) => {
-    if (event.target === infoPopUp) {
-      closePopUp();
-    }
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !infoPopUp.hidden) {
-      closePopUp();
-    }
-  });
-}
-
-const compareBlocks = document.querySelectorAll('[data-compare]');
-
-compareBlocks.forEach((block) => {
+const initializeCompareBlock = (block) => {
   const overlay = block.querySelector('.compare-overlay');
   const handle = block.querySelector('.compare-handle');
   const card = block.closest('.compare-card');
@@ -92,5 +128,102 @@ compareBlocks.forEach((block) => {
       handle.releasePointerCapture(event.pointerId);
     }
   });
+};
 
-});
+const renderMap = (map) => {
+  const mapTitle = document.querySelector('[data-map-title]');
+  const mapDescription = document.querySelector('[data-map-description]');
+  const mapEmbed = document.querySelector('[data-map-embed]');
+
+  if (!map || !mapEmbed) {
+    return;
+  }
+
+  if (mapTitle) {
+    mapTitle.textContent = map.title;
+  }
+
+  if (mapDescription) {
+    mapDescription.textContent = map.description;
+  }
+
+  mapEmbed.innerHTML = '';
+
+  const iframe = document.createElement('iframe');
+  iframe.src = map.embedUrl;
+  iframe.width = '640';
+  iframe.height = '480';
+  iframe.loading = 'lazy';
+  iframe.referrerPolicy = 'no-referrer-when-downgrade';
+  iframe.title = map.iframeTitle;
+
+  mapEmbed.append(iframe);
+};
+
+const renderPage = (data) => {
+  const pageTitle = document.querySelector('[data-page-title]');
+  const pageDescription = document.querySelector('[data-page-description]');
+  const gallery = document.querySelector('[data-gallery]');
+  const footerNote = document.querySelector('[data-footer-note]');
+
+  document.title = data.page.title;
+
+  if (pageTitle) {
+    pageTitle.textContent = data.page.title;
+  }
+
+  if (pageDescription) {
+    pageDescription.textContent = data.page.description;
+  }
+
+  if (footerNote) {
+    footerNote.textContent = data.footerNote;
+  }
+
+  if (!gallery) {
+    return;
+  }
+
+  gallery.innerHTML = '';
+  data.images.forEach((entry) => {
+    gallery.append(createCompareCard(entry));
+  });
+
+  renderMap(data.map);
+  document.querySelectorAll('[data-compare]').forEach(initializeCompareBlock);
+};
+
+const loadPageData = async () => {
+  try {
+    const response = await fetch(DATA_URL);
+
+    if (!response.ok) {
+      throw new Error(`Daten konnten nicht geladen werden: ${response.status}`);
+    }
+
+    const data = await response.json();
+    renderPage(data);
+  } catch (error) {
+    const gallery = document.querySelector('[data-gallery]');
+    gallery.innerHTML = '<p class="load-error">Die Bilddaten konnten nicht geladen werden.</p>';
+    console.error(error);
+  }
+};
+
+if (infoPopUp && popUpClose) {
+  popUpClose.addEventListener('click', closePopUp);
+
+  infoPopUp.addEventListener('click', (event) => {
+    if (event.target === infoPopUp) {
+      closePopUp();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !infoPopUp.hidden) {
+      closePopUp();
+    }
+  });
+}
+
+loadPageData();
