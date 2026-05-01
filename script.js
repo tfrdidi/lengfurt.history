@@ -130,55 +130,8 @@ const initializeCompareBlock = (block) => {
   });
 };
 
-const renderMap = (map) => {
-  const mapTitle = document.querySelector('[data-map-title]');
-  const mapDescription = document.querySelector('[data-map-description]');
-  const mapEmbed = document.querySelector('[data-map-embed]');
-
-  if (!map || !mapEmbed) {
-    return;
-  }
-
-  if (mapTitle) {
-    mapTitle.textContent = map.title;
-  }
-
-  if (mapDescription) {
-    mapDescription.textContent = map.description;
-  }
-
-  mapEmbed.innerHTML = '';
-
-  const iframe = document.createElement('iframe');
-  iframe.src = map.embedUrl;
-  iframe.width = '640';
-  iframe.height = '480';
-  iframe.loading = 'lazy';
-  iframe.referrerPolicy = 'no-referrer-when-downgrade';
-  iframe.title = map.iframeTitle;
-
-  mapEmbed.append(iframe);
-};
-
 const renderPage = (data) => {
-  const pageTitle = document.querySelector('[data-page-title]');
-  const pageDescription = document.querySelector('[data-page-description]');
   const gallery = document.querySelector('[data-gallery]');
-  const footerNote = document.querySelector('[data-footer-note]');
-
-  document.title = data.page.title;
-
-  if (pageTitle) {
-    pageTitle.textContent = data.page.title;
-  }
-
-  if (pageDescription) {
-    pageDescription.textContent = data.page.description;
-  }
-
-  if (footerNote) {
-    footerNote.textContent = data.footerNote;
-  }
 
   if (!gallery) {
     return;
@@ -189,7 +142,6 @@ const renderPage = (data) => {
     gallery.append(createCompareCard(entry));
   });
 
-  renderMap(data.map);
   document.querySelectorAll('[data-compare]').forEach(initializeCompareBlock);
 };
 

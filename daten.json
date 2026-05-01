@@ -1,8 +1,4 @@
 {
-  "page": {
-    "title": "Lengfurt-History",
-    "description": "Eine visuelle Zeitreise in die Geschichte von Lengfurt."
-  },
   "images": [
     {
       "title": "F6 - Blick vom Kallmuth aus",
@@ -73,12 +69,5 @@
         "text": "Das Früher-Bild muss vor 1939 aufgenommen sein. Es stammt von einer Postkarte aus 1939."
       }
     }
-  ],
-  "map": {
-    "title": "Karte mit den Aufnahmepunkten",
-    "description": "Hier sind die Standorte dokumentiert, von wo aus die Fotos aufgenommen wurden.",
-    "embedUrl": "https://www.google.com/maps/d/embed?mid=1ggDm_IBhAO5Al_2fngC7RQu9NAcwdJE&ehbc=2E312F",
-    "iframeTitle": "Google My Maps Karte"
-  },
-  "footerNote": "Hier kommen in Zukunft noch ein paar Fotos dazu."
+  ]
 }
