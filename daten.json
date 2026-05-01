@@ -18,7 +18,6 @@
         }
       },
       "popup": {
-        "linkText": "Weitere Informationen",
         "title": "F6 - Blick vom Kallmuth aus",
         "text": "Datierung: Das Früher-Bild ist von vor 1904. In diesem Jahr wurde die erste Lengfurter Mainbrücke gebaut. Auch die Autobahn A3 im Hintergrund vom Kloster wurde erst nach dem Zweiten Weltkrieg fertiggestellt."
       }
@@ -41,7 +40,6 @@
         }
       },
       "popup": {
-        "linkText": "Weitere Informationen",
         "title": "F25 - Blick vom Kallmuth auf Lengfurt",
         "text": "Zu dieser Zeit gab es noch keine Schleuse in Lengfurt."
       }
@@ -64,7 +62,6 @@
         }
       },
       "popup": {
-        "linkText": "Weitere Informationen",
         "title": "F17 2 - Blick vom Mainkai aufs Kloster",
         "text": "Das Früher-Bild muss vor 1939 aufgenommen sein. Es stammt von einer Postkarte aus 1939."
       }

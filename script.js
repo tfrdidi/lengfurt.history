@@ -27,32 +27,8 @@ const closePopUp = () => {
 };
 
 const createCompareCard = (entry) => {
-  const article = document.createElement('article');
-  article.className = 'compare-card';
-
-  article.innerHTML = `
-    <div class="compare-media" data-compare>
-      <div class="compare-label left"></div>
-      <div class="compare-label right"></div>
-
-      <img class="compare-base" />
-
-      <div class="compare-overlay">
-        <img />
-      </div>
-
-      <div class="compare-handle" aria-hidden="true"></div>
-    </div>
-
-    <div class="compare-content">
-      <h2></h2>
-      <p></p>
-      <div class="compare-meta">
-        <span class="slider-value">Position: 50%</span>
-        <a class="compare-link" href="#info-pop-up">Weitere Informationen</a>
-      </div>
-    </div>
-  `;
+  const template = document.querySelector('#compare-card-template');
+  const article = template.content.firstElementChild.cloneNode(true);
 
   const leftLabel = article.querySelector('.compare-label.left');
   const rightLabel = article.querySelector('.compare-label.right');
@@ -70,7 +46,6 @@ const createCompareCard = (entry) => {
   overlayImage.alt = entry.images.before.alt;
   title.textContent = entry.title;
   description.textContent = entry.description;
-  link.textContent = entry.popup?.linkText ?? 'Weitere Informationen';
   link.addEventListener('click', (event) => {
     event.preventDefault();
     openPopUp(entry.popup?.title ?? entry.title, entry.popup?.text ?? '');
